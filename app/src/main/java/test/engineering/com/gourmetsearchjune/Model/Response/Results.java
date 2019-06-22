@@ -5,14 +5,16 @@ import java.util.List;
 public class Results {
 
     private String api_version;
+    private List<ErrorResults> error;
     private String results_returned;
     private String results_start;
     private List<StoreResponse> shop;
     private List<GenreResponse> genre;
     private String results_available;
 
-    public Results(String api_version, String results_returned, String results_start, List<StoreResponse> shop, List<GenreResponse> genre, String results_available) {
+    public Results(String api_version, List<ErrorResults> error, String results_returned, String results_start, List<StoreResponse> shop, List<GenreResponse> genre, String results_available) {
         this.api_version = api_version;
+        this.error = error;
         this.results_returned = results_returned;
         this.results_start = results_start;
         this.shop = shop;
@@ -26,6 +28,14 @@ public class Results {
 
     public void setApi_version(String api_version) {
         this.api_version = api_version;
+    }
+
+    public List<ErrorResults> getError() {
+        return this.error;
+    }
+
+    public void setError(List<ErrorResults> error) {
+        this.error = error;
     }
 
     public String getResults_returned() {
