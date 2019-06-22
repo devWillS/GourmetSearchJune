@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">グルメサーチ</string>
 
+    <string name="GENRE">GENRE</string>
     <string name="STORE">STORE</string>
+
+    <string name="searchAroundHere">付近で検索</string>
 </resources>

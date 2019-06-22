@@ -3,7 +3,7 @@ package test.engineering.com.gourmetsearchjune.Model.API;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import test.engineering.com.gourmetsearch.Model.Response.HotPepperObject;
+import test.engineering.com.gourmetsearchjune.Model.Response.HotPepperObject;
 
 public interface APIInterface {
     @GET("gourmet/v1")
