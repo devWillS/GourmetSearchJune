@@ -11,13 +11,14 @@ import android.widget.ImageView;
 import java.util.List;
 
 import test.engineering.com.gourmetsearchjune.Entities.GenreEntity;
-import test.engineering.com.gourmetsearchjune.Model.Dao.GenreEntityDao;
 import test.engineering.com.gourmetsearchjune.R;
 import test.engineering.com.gourmetsearchjune.Util.RecyclerView.ClickListener;
 import test.engineering.com.gourmetsearchjune.Util.RecyclerView.DividerItemDecoration;
 import test.engineering.com.gourmetsearchjune.Util.RecyclerView.RecyclerTouchListener;
 
-public class GenreSelectActivity extends AppCompatActivity {
+public class GenreSelectActivity extends AppCompatActivity implements GenreSelectContract.View {
+    private GenreSelectPresenter presenter;
+
     private ImageView backImageView;
     private RecyclerView genreRecyclerView;
 
@@ -28,6 +29,8 @@ public class GenreSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_genre_select);
+
+        presenter = new GenreSelectPresenter(new GenreSelectImplement(), this);
 
         setupView();
     }
@@ -48,7 +51,7 @@ public class GenreSelectActivity extends AppCompatActivity {
             }
         });
 
-        genreEntityList = GenreEntityDao.getInstance().findAll();
+        genreEntityList = presenter.getGenreList();
 
         adapter = new GenreAdapter(genreEntityList);
         genreRecyclerView.setAdapter(adapter);
@@ -72,5 +75,10 @@ public class GenreSelectActivity extends AppCompatActivity {
 
                     }
                 }));
+    }
+
+    @Override
+    public void setPresenter(GenreSelectContract.Presenter presenter) {
+
     }
 }
