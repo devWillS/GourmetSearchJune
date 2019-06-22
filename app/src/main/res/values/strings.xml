@@ -12,5 +12,6 @@
     <string name="selectGenreHint">ジャンルを選択</string>
 
     <string name="errorTitle">エラー</string>
-    <string name="errorMessage">読み込みに失敗しました。</string>
+    <string name="apiErrorMessage">API通信に失敗しました。</string>
+    <string name="dbSaveErrorMessage">DB保存に失敗しました。</string>
 </resources>

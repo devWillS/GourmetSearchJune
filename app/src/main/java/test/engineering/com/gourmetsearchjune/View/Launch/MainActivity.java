@@ -44,11 +44,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void receivedUnknownError() {
-        AlertUtil.showAlertWithOK(this, R.string.errorTitle, R.string.errorMessage);
+        AlertUtil.showAlertWithOK(this, R.string.errorTitle, R.string.apiErrorMessage);
     }
 
     @Override
     public void saveFailed() {
-
+        AlertUtil.showAlertWithOK(this, R.string.errorTitle, R.string.dbSaveErrorMessage);
     }
 }
