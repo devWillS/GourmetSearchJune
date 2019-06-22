@@ -1,7 +1,6 @@
 package test.engineering.com.gourmetsearchjune.View.GourmetSearch;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -45,17 +44,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import test.engineering.com.gourmetsearchjune.BuildConfig;
 import test.engineering.com.gourmetsearchjune.Entities.GenreEntity;
-import test.engineering.com.gourmetsearchjune.Model.API.APIInterface;
-import test.engineering.com.gourmetsearchjune.Model.API.APIService;
 import test.engineering.com.gourmetsearchjune.Model.Response.ErrorResults;
-import test.engineering.com.gourmetsearchjune.Model.Response.HotPepperObject;
 import test.engineering.com.gourmetsearchjune.Model.Response.StoreResponse;
 import test.engineering.com.gourmetsearchjune.R;
+import test.engineering.com.gourmetsearchjune.Util.AlertUtil;
 import test.engineering.com.gourmetsearchjune.Util.BitmapUtil;
 import test.engineering.com.gourmetsearchjune.Util.NetworkStateReceiver;
 import test.engineering.com.gourmetsearchjune.View.GenreSelect.GenreSelectActivity;
@@ -63,9 +56,11 @@ import test.engineering.com.gourmetsearchjune.View.StoreDetail.WebActivity;
 
 import static android.widget.NumberPicker.OnScrollListener.SCROLL_STATE_IDLE;
 
-public class GourmetSearchActivity extends FragmentActivity implements OnMapReadyCallback, NetworkStateReceiver.NetworkStateReceiverListener, GoogleMap.OnMarkerClickListener, StoreDetailViewHolder.StoreDetailVIewHolderListener {
+public class GourmetSearchActivity extends FragmentActivity implements GourmetSearchContract.View, OnMapReadyCallback, NetworkStateReceiver.NetworkStateReceiverListener, GoogleMap.OnMarkerClickListener, StoreDetailViewHolder.StoreDetailVIewHolderListener {
     public static final int LOCATION_REQUEST = 111;
     public static final int GENRE_SELECT = 222;
+
+    private GourmetSearchPresenter presenter;
 
     private NetworkStateReceiver networkStateReceiver;
     private GoogleMap mMap;
@@ -212,6 +207,7 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
     }
 
     private void setup() {
+        presenter = new GourmetSearchPresenter(new GourmetSearchImplement(), this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -322,44 +318,7 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
             return;
         }
         LatLng position = myLocation.getPosition();
-        APIInterface apiInterface = APIService.createService(APIInterface.class);
-        Call<HotPepperObject> call = apiInterface.getOptionsHotPepperObjectNew(
-                BuildConfig.hotpepperAPIKey,
-                selectedGenre == null ? "" : selectedGenre.getCode(),
-                "json",
-                position.latitude,
-                position.longitude,
-                26
-        );
-        call.enqueue(new Callback<HotPepperObject>() {
-            @Override
-            public void onResponse(Call<HotPepperObject> call, Response<HotPepperObject> response) {
-                if (response.isSuccessful()) {
-                    List<ErrorResults> errorResults = response.body().getResults().getError();
-                    if (errorResults != null && !errorResults.isEmpty()) {
-                        ErrorResults error = errorResults.get(0);
-                        new AlertDialog.Builder(GourmetSearchActivity.this)
-                                .setTitle(getString(R.string.errorTitle) + "：" + error.getCode())
-                                .setMessage(error.getMessage())
-                                .setPositiveButton("OK", null)
-                                .show();
-                    } else {
-                        storeList.clear();
-                        storeList.addAll(response.body().getResults().getShop());
-                        receivedStoreDataList();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HotPepperObject> call, Throwable t) {
-                new AlertDialog.Builder(GourmetSearchActivity.this)
-                        .setTitle(getString(R.string.errorTitle))
-                        .setMessage(getString(R.string.errorMessage))
-                        .setPositiveButton("OK", null)
-                        .show();
-            }
-        });
+        presenter.getStoreList(position, selectedGenre);
     }
 
     private void receivedStoreDataList() {
@@ -474,5 +433,27 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
     @Override
     public Marker getMyLocation() {
         return myLocation;
+    }
+
+    @Override
+    public void receivedStoreList(List<StoreResponse> storeList) {
+        this.storeList.clear();
+        this.storeList.addAll(storeList);
+        receivedStoreDataList();
+    }
+
+    @Override
+    public void receivedError(ErrorResults error) {
+        AlertUtil.showAlertWithOK(this, R.string.errorTitle, error.getMessage());
+    }
+
+    @Override
+    public void receivedUnknownError() {
+        AlertUtil.showAlertWithOK(this, R.string.errorTitle, R.string.apiErrorMessage);
+    }
+
+    @Override
+    public void setPresenter(GourmetSearchContract.Presenter presenter) {
+
     }
 }
