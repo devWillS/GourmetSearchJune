@@ -8,9 +8,8 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.Sort;
-import test.engineering.com.gourmetsearch.Entities.GenreEntity;
-import test.engineering.com.gourmetsearch.Model.Response.GenreResponse;
+import test.engineering.com.gourmetsearchjune.Entities.GenreEntity;
+import test.engineering.com.gourmetsearchjune.Model.Response.GenreResponse;
 
 public class GenreEntityDao {
     private static GenreEntityDao dao;
