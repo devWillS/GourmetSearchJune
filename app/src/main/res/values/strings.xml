@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">GourmetSearchJune</string>
+    <string name="app_name">グルメサーチ</string>
+
+    <string name="STORE">STORE</string>
 </resources>
