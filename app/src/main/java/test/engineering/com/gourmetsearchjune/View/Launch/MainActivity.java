@@ -1,7 +1,9 @@
-package test.engineering.com.gourmetsearchjune;
+package test.engineering.com.gourmetsearchjune.View.Launch;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import test.engineering.com.gourmetsearchjune.R;
 
 public class MainActivity extends AppCompatActivity {
 
